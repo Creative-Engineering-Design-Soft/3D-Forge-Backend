@@ -5,6 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entity/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PrinterModule } from './printer/printer.module';
+import { Model } from './model/entity/model.entity';
+import { ModelModule } from './model/model.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 console.log(process.env.DB_HOST);
 console.log(process.env.DB_USERNAME);
@@ -27,9 +32,14 @@ console.log(process.env.DB_DATABASE);
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [User],
+        entities: [User, Model],
         synchronize: true,
       }),
+    }),
+    PrinterModule,
+    ModelModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
     }),
   ],
   controllers: [AppController],
