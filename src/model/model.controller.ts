@@ -16,12 +16,17 @@ const fileInterceptorOption = FileInterceptor('file', {
   storage: diskStorage({
     destination: './public/upload/model',
     filename: (req, file, callback) => {
-      callback(null, extname(file.originalname));
+      const name = file.originalname.split('.')[0]; // 이름만
+      const fileExt = extname(file.originalname); // .stl
+      const timestamp = Date.now();
+      callback(null, `${name}-${timestamp}${fileExt}`);
     },
   }),
   limits: { fileSize: fileSizeLimit },
   fileFilter: (req, file, callback) => {
-    if (!file.mimetype.match(/\/(STL|gcode|stl|obg)$/)) {
+    const allowedExt = ['.stl', '.gcode', '.obg'];
+    const ext = extname(file.originalname).toLowerCase();
+    if (!allowedExt.includes(ext)) {
       return callback(
         new BadRequestException('STL 또는 G-Code 파일만 게시할 수 있습니다'),
         false,
@@ -41,10 +46,9 @@ export class ModelController {
   @Post('uploads')
   @UseInterceptors(fileInterceptorOption)
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    this.logger.log(`Uploaded '${file.filename}'`);
-    this.modelService.save({
-      
-    });
+    const filename = file.filename;
+    this.logger.log(`Uploaded '${filename}'`);
+    this.modelService.save({ name: filename, filePath: file.path });
     return { filePath: `${modelUploadPath}/${file.filename}` };
   }
 }
