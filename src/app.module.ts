@@ -10,6 +10,7 @@ import { Model } from './model/entity/model.entity';
 import { ModelModule } from './model/model.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { Printer } from './printer/entity/printer.entity';
 
 console.log(process.env.DB_HOST);
 console.log(process.env.DB_USERNAME);
@@ -32,7 +33,7 @@ console.log(process.env.DB_DATABASE);
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [User, Model],
+        entities: [User, Model, Printer],
         synchronize: true,
       }),
     }),
