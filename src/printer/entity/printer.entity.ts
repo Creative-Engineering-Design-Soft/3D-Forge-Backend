@@ -1,4 +1,4 @@
-import { TimeBaseEntity } from 'src/common/time-base.entity';
+import { TimeBaseEntity } from 'src/common/entity/time-base.entity';
 import {
   Column,
   DeleteDateColumn,

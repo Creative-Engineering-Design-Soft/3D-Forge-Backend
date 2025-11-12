@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Ip, Param, Post } from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { ConnectionDTO } from './dto/connection.dto';
+import { ResponseDTO } from 'src/common/apiPayload/reponse.dto';
+import { GeneralSuccessCode } from 'src/common/apiPayload/success.code';
 
 @Controller('printers')
 export class PrinterController {
@@ -17,8 +19,25 @@ export class PrinterController {
   }
 
   @Post('connection')
-  connectHardware(@Body() dto: ConnectionDTO) {
-    const printer = this.printerService.findOne({ hardwareId: dto.hardwareId });
-    return printer;
+  async connectHardware(
+    @Ip() ip: string,
+    @Body() dto: ConnectionDTO,
+  ): Promise<ResponseDTO> {
+    const printer = await this.printerService.onAccessDevice({
+      hardwareId: dto.hardwareId,
+      address: ip,
+    });
+    return {
+      ...GeneralSuccessCode.OK,
+      result: printer,
+    };
+  }
+
+  @Post('disconnection')
+  async disconnectHardware(@Body() dto: ConnectionDTO): Promise<ResponseDTO> {
+    return {
+      ...GeneralSuccessCode.OK,
+      result: await this.printerService.onExitDevice(dto),
+    };
   }
 }
