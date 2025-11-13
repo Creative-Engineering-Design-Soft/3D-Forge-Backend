@@ -2,15 +2,22 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseService } from 'src/common/service/base.service';
 import { User } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { Payload } from './security/payload.interface';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDTO } from './dto/create-user.dto';
+import { CreateUserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(@InjectRepository(User) private repo: Repository<User>) {
     super(repo);
+  }
+
+  async findOneOrThrow(where: FindOptionsWhere<User>): Promise<User> {
+    const user = await this.repo.findOne({ where });
+    if (!user)
+      throw new NotFoundException('조건에 맞는 사용자가 존재하지 않습니다');
+    return user;
   }
 
   async findByPayload(payload: Payload) {

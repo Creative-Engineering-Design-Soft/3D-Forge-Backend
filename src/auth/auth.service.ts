@@ -8,10 +8,9 @@ import { UserService } from './user.service';
 import { Payload } from './security/payload.interface';
 import { User } from './entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserDTO } from './dto/login-user.dto';
 import * as jwt from 'jsonwebtoken';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { ResponseToken } from './dto/response-token.dto';
+import { JwtPayloadDTO } from './dto/jwt.dto';
+import { CreateUserDTO, LoginUserDTO, OAuthDTO } from './dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -48,7 +47,7 @@ export class AuthService {
   }
 
   //SECTION - vaildate
-  async vaildateUser(loginDto: LoginUserDTO): Promise<ResponseToken> {
+  async vaildateUser(loginDto: LoginUserDTO): Promise<JwtPayloadDTO> {
     const user = await this.userService.findOne({ email: loginDto.email });
     // 이메일 존재 X
     if (!user)
@@ -78,5 +77,17 @@ export class AuthService {
     } catch {
       return false;
     }
+  }
+
+  async vaildateOAuth(oauthDto: OAuthDTO): Promise<JwtPayloadDTO> {
+    const user = await this.userService.findOneOrThrow({
+      email: oauthDto.email,
+    });
+    const payload = this.userToPayload(user);
+
+    return {
+      // JWT 발급
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }

@@ -12,11 +12,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { Printer } from './printer/entity/printer.entity';
 
-console.log(process.env.DB_HOST);
-console.log(process.env.DB_USERNAME);
-console.log(process.env.DB_PASSWORD);
-console.log(process.env.DB_DATABASE);
-
 @Module({
   imports: [
     ConfigModule.forRoot({

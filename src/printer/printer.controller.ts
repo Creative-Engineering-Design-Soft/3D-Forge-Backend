@@ -2,7 +2,7 @@ import { Body, Controller, Get, Ip, Param, Post } from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { ConnectionDTO } from './dto/connection.dto';
 import { ResponseDTO } from 'src/common/apiPayload/reponse.dto';
-import { GeneralSuccessCode } from 'src/common/apiPayload/success.code';
+import { GeneralSuccessCode } from 'src/common/apiPayload/code/success.code';
 
 @Controller('printers')
 export class PrinterController {
