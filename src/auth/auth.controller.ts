@@ -14,8 +14,8 @@ import { LoginGuard } from './security/auth.guard';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDTO, LoginUserDTO, OAuthDTO } from './dto/user.dto';
-import { ResponseDTO } from 'src/common/apiPayload/reponse.dto';
-import { GeneralSuccessCode } from 'src/common/apiPayload/code/success.code';
+import { ResponseDTO } from '../common/apiPayload/reponse.dto';
+import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 
 @Controller('auth')
 export class AuthController {

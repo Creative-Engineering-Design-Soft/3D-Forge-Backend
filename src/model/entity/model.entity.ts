@@ -1,4 +1,4 @@
-import { TimeBaseEntity } from 'src/common/entity/time-base.entity';
+import { TimeBaseEntity } from '../../common/entity/time-base.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

@@ -11,6 +11,7 @@ import { ModelModule } from './model/model.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { Printer } from './printer/entity/printer.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { Printer } from './printer/entity/printer.entity';
     }),
     PrinterModule,
     ModelModule,
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),

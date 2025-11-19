@@ -1,10 +1,10 @@
-import { TimeBaseEntity } from 'src/common/entity/time-base.entity';
 import {
   Column,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { TimeBaseEntity } from '../../common/entity/time-base.entity';
 
 @Entity()
 export class Printer extends TimeBaseEntity {

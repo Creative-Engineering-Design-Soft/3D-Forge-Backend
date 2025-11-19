@@ -1,21 +1,19 @@
 import { Body, Controller, Get, Ip, Param, Post } from '@nestjs/common';
 import { PrinterService } from './printer.service';
-import { ConnectionDTO } from './dto/connection.dto';
-import { ResponseDTO } from 'src/common/apiPayload/reponse.dto';
-import { GeneralSuccessCode } from 'src/common/apiPayload/code/success.code';
+import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
+import { ResponseDTO } from '../common/apiPayload/reponse.dto';
+import { ConnectionDTO } from './dto/hardware-request.dto';
 
 @Controller('printers')
 export class PrinterController {
   constructor(private printerService: PrinterService) {}
 
-  @Get(':id')
-  getPrinterInfo(@Param('id') id: number) {
-    return this.printerService.getInfo(id);
-  }
+  @Get(':hardwareId')
+  getPrinterInfo(@Param('hardwareId') hardwareId: number) {}
 
-  @Get(':id/status')
-  getPrinterStatus(@Param('id') id: number) {
-    return this.printerService.getStatus(id);
+  @Get(':hardwareId/status')
+  getPrinterStatus(@Param('hardwareId') hardwareId: string) {
+    return this.printerService.getStatus(hardwareId);
   }
 
   @Post('connection')
