@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
@@ -24,6 +24,15 @@ async function bootstrap() {
 
   const PORT = process.env.PORT ?? 3000;
   logger.log(`Server is running on localhost:${PORT}`);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transformOptions: { enableImplicitConversion: false },
+    }),
+  );
 
   await app.listen(PORT);
 }

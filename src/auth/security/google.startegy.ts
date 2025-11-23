@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-google-oauth20';
-import { OAuthDTO } from '../dto/user.dto';
+import { OAuthDTO } from '../dto/user.req.dto';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { Payload } from './security/payload.interface';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDTO } from './dto/user.dto';
+import { CreateUserReqDTO } from './dto/user.req.dto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -33,19 +33,19 @@ export class UserService extends BaseService<User> {
   }
 
   /** Include encrypting password */
-  async create(createDto: CreateUserDTO): Promise<User> {
+  async create(createDto: CreateUserReqDTO): Promise<User> {
     await this.encryptPassword(createDto);
     const user = await this.repo.save({ ...createDto });
     return user;
   }
 
   //SECTION - crpyto
-  async encryptPassword(userDto: CreateUserDTO) {
+  async encryptPassword(userDto: CreateUserReqDTO) {
     userDto.password = await this.encrypt(userDto.password);
   }
 
   async encrypt(data: string) {
-    return await bcrypt.hash(data, 10);
+    return await bcrypt.hash(data, Number(process.env.SOLT_COUNT));
   }
 
   async comparePassword(password: string, user: User) {

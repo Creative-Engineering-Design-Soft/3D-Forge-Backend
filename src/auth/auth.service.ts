@@ -10,7 +10,7 @@ import { User } from './entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { JwtPayloadDTO } from './dto/jwt.dto';
-import { CreateUserDTO, LoginUserDTO, OAuthDTO } from './dto/user.dto';
+import { CreateUserReqDTO, LoginUserReqDTO, OAuthDTO } from './dto/user.req.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
     };
   }
 
-  async register(createDto: CreateUserDTO) {
+  async register(createDto: CreateUserReqDTO) {
     const existUser = await this.userService.findOne({
       email: createDto.email,
     });
@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   //SECTION - vaildate
-  async vaildateUser(loginDto: LoginUserDTO): Promise<JwtPayloadDTO> {
+  async vaildateUser(loginDto: LoginUserReqDTO): Promise<JwtPayloadDTO> {
     const user = await this.userService.findOne({ email: loginDto.email });
     // 이메일 존재 X
     if (!user)

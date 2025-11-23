@@ -9,7 +9,9 @@ export class PrinterController {
   constructor(private printerService: PrinterService) {}
 
   @Get(':hardwareId')
-  getPrinterInfo(@Param('hardwareId') hardwareId: number) {}
+  getPrinterInfo(@Param('hardwareId') hardwareId: number) {
+    return hardwareId;
+  }
 
   @Get(':hardwareId/status')
   getPrinterStatus(@Param('hardwareId') hardwareId: string) {
