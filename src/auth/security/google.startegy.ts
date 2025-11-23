@@ -12,8 +12,8 @@ import { OAuthDTO } from '../dto/user.req.dto';
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
     super({
-      clientID: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string,
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: process.env.GOOGLE_REDIRECT_URL,
       scope: ['email', 'profile'],
     });

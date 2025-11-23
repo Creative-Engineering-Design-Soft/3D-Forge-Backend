@@ -4,7 +4,7 @@ import { Repository, DeepPartial, ObjectLiteral } from 'typeorm';
 @Injectable()
 export abstract class BaseService<T extends ObjectLiteral> {
   constructor(
-    private readonly repository: Repository<T>,
+    protected readonly repository: Repository<T>,
     private relations: string[] = [],
   ) {}
 

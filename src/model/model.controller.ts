@@ -1,15 +1,21 @@
 import {
   BadRequestException,
   Controller,
+  Get,
   Logger,
+  Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { ModelService } from './model.service';
+import { LoginGuard } from '../auth/security/auth.guard';
+import { UserId } from '../auth/decorator/auth.decorator';
+import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 
 const fileSizeLimit = 100 * 1024 * 1024; // 100MB
 const fileInterceptorOption = FileInterceptor('file', {
@@ -44,11 +50,40 @@ export class ModelController {
   constructor(private modelService: ModelService) {}
 
   @Post('uploads')
+  @UseGuards(LoginGuard)
   @UseInterceptors(fileInterceptorOption)
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @UserId() userId: number,
+  ) {
     const filename = file.filename;
     this.logger.log(`Uploaded '${filename}'`);
-    this.modelService.save({ name: filename, filePath: file.path });
-    return { filePath: `${modelUploadPath}/${file.filename}` };
+    this.modelService.save({
+      name: filename,
+      filePath: file.path,
+      user: { id: userId },
+    });
+    return {
+      ...GeneralSuccessCode.CREATED,
+      result: { filePath: `${modelUploadPath}/${file.filename}` },
+    };
+  }
+
+  @Get('me')
+  @UseGuards(LoginGuard)
+  async getMyFiles(@UserId() userId: number) {
+    return {
+      ...GeneralSuccessCode.OK,
+      result: await this.modelService.findByUserID(userId),
+    };
+  }
+
+  @Get(':id')
+  @UseGuards(LoginGuard)
+  async getFileData(@UserId() userId: number, @Param('id') id: number) {
+    return {
+      ...GeneralSuccessCode.OK,
+      result: await this.modelService.findOwn(userId, id),
+    };
   }
 }

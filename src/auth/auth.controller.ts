@@ -12,7 +12,11 @@ import {
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateUserReqDTO, LoginUserReqDTO, OAuthDTO } from './dto/user.req.dto';
+import {
+  CreateUserReqDTO,
+  LoginUserReqDTO,
+  OAuthDTO,
+} from './dto/user.req.dto';
 import { ResponseDTO } from '../common/apiPayload/reponse.dto';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import { UserId } from './decorator/auth.decorator';
@@ -54,12 +58,16 @@ export class AuthController {
   @Get('google')
   @UseGuards(AuthGuard('google'))
   googleLogin(@Ip() ip: string) {
-    this.logger.log(`${ip}에서 Google Redirect 요청`);
+    this.logger.log(`${ip}에서 Google 요청`);
   }
 
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  async googleLoginRedirect(@Req() req: Request): Promise<ResponseDTO> {
+  async googleLoginRedirect(
+    @Req() req: Request,
+    @Ip() ip: string,
+  ): Promise<ResponseDTO> {
+    this.logger.log(`${ip}에서 Google Redirect 요청`);
     const user = req.user as OAuthDTO;
 
     return {
