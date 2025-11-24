@@ -4,7 +4,7 @@ import {
   SuccessConnectionDTO,
   SuccessStatusDTO,
   SuccessUploadDTO,
-} from './dto/hardware-response.dto';
+} from './dto/hardware.res.dto';
 
 @Injectable()
 export class HardwareService {

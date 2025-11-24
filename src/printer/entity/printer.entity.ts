@@ -2,14 +2,19 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { TimeBaseEntity } from '../../common/entity/time-base.entity';
+import { User } from '../../auth/entity/user.entity';
 
 @Entity()
 export class Printer extends TimeBaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => User, (user) => user.printers)
+  user: User;
 
   @Column()
   name: string;

@@ -9,8 +9,13 @@ import { Printer } from './entity/printer.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseService } from '../common/service/base.service';
-import { AccessDTO, ConnectionDTO } from './dto/hardware-request.dto';
+import {
+  AccessDTO,
+  ConnectionDTO,
+  UploadFileDTO,
+} from './dto/hardware.req.dto';
 import { HardwareService } from './hardware.service';
+import { ModelService } from '../model/model.service';
 
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
@@ -18,11 +23,13 @@ export class PrinterService extends BaseService<Printer> {
 
   constructor(
     private readonly hardwareService: HardwareService,
+    private readonly modelService: ModelService,
     @InjectRepository(Printer) repo: Repository<Printer>,
   ) {
     super(repo);
   }
 
+  // SECTION - User Side
   async findOneOrThrow(hardwareId: string): Promise<Printer> {
     const printer = await this.findOne({ hardwareId });
     if (!printer)
@@ -36,6 +43,12 @@ export class PrinterService extends BaseService<Printer> {
     return printer;
   }
 
+  async getStatus(hardwareId: string) {
+    const printer = await this.findOneOrThrow(hardwareId);
+    return printer;
+  }
+
+  // SECTION - Hardware Side
   async onAccessDevice(dto: AccessDTO) {
     if (!dto.hardwareId)
       throw new BadRequestException('hardwareId의 값이 존재하지 않습니다');
@@ -64,8 +77,12 @@ export class PrinterService extends BaseService<Printer> {
     return 'OK';
   }
 
-  async getStatus(hardwareId: string) {
-    const printer = await this.findOneOrThrow(hardwareId);
-    return printer;
+  async uploadFile(hardwareId: string, userId: number, dto: UploadFileDTO) {
+    const hardware = await this.findOneOrThrow(hardwareId);
+    const model = await this.modelService.findOwn(userId, dto.modelId);
+    return await this.hardwareService.sendGCode(
+      hardware.address,
+      model.filePath,
+    );
   }
 }
