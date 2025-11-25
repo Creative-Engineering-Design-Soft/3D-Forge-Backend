@@ -6,12 +6,26 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger, ValidationPipe } from '@nestjs/common';
 
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
 dotenv.config();
 
 const logger = new Logger('Main');
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const options = new DocumentBuilder()
+    .setTitle('3차원 대장간')
+    .setDescription('3차원 대장간 API Docs')
+    .setVersion('1.0')
+    .addServer('http://localhost:3000/', 'Local environment')
+    .addTag('3D Forge API')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('swagger-ui', app, document);
+  logger.log('Swagger on /swagger-ui');
 
   app.enableCors({
     origin: process.env.CORS_URL, // 특정 도메인 설정

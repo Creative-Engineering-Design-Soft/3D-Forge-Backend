@@ -16,6 +16,7 @@ import { ModelService } from './model.service';
 import { LoginGuard } from '../auth/security/auth.guard';
 import { UserId } from '../auth/decorator/auth.decorator';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
+import { ApiOperation } from '@nestjs/swagger';
 
 const fileSizeLimit = 100 * 1024 * 1024; // 100MB
 const fileInterceptorOption = FileInterceptor('file', {
@@ -49,6 +50,7 @@ export class ModelController {
 
   constructor(private modelService: ModelService) {}
 
+  @ApiOperation({ summary: '모델 파일 업로드' })
   @Post('uploads')
   @UseGuards(LoginGuard)
   @UseInterceptors(fileInterceptorOption)
@@ -69,6 +71,7 @@ export class ModelController {
     };
   }
 
+  @ApiOperation({ summary: '내가 업로드한 모델 파일 목록' })
   @Get('me')
   @UseGuards(LoginGuard)
   async getMyFiles(@UserId() userId: number) {
@@ -78,6 +81,7 @@ export class ModelController {
     };
   }
 
+  @ApiOperation({ summary: '특정 모델 파일 정보' })
   @Get(':id')
   @UseGuards(LoginGuard)
   async getFileData(@UserId() userId: number, @Param('id') id: number) {
