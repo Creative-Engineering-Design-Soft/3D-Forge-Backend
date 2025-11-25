@@ -9,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
-import { ApiResponseType, ResponseDTO } from '../common/apiPayload/reponse.dto';
+import {
+  ApiResponseArrayType,
+  ApiResponseType,
+  ResponseDTO,
+} from '../common/apiPayload/reponse.dto';
 import { ConnectionDTO, UploadFileDTO } from './dto/hardware.req.dto';
 import { LoginGuard } from '../auth/security/auth.guard';
 import { UserId } from '../auth/decorator/auth.decorator';
@@ -22,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import {
   ConnectionResDTO,
+  PrinterResDTO,
   StatusResDTO,
   UploadResDTO,
 } from './dto/hardware.res.dto';
@@ -33,6 +38,17 @@ export class PrinterController {
   constructor(private printerService: PrinterService) {}
 
   // User Side
+  @ApiOperation({ summary: '내 3D 프린터 조회' })
+  @ApiResponseArrayType(PrinterResDTO, 200)
+  @Get('me')
+  @UseGuards(LoginGuard)
+  async getMyPrinters(@UserId() userId: number) {
+    return {
+      ...GeneralSuccessCode.OK,
+      result: await this.printerService.findByUserId(userId),
+    };
+  }
+
   @ApiOperation({ summary: '3D 프린터 조회' })
   @ApiQuery({ name: 'hardwareId', required: true, example: '0000-0000' })
   @Get(':hardwareId')
@@ -106,6 +122,7 @@ export class PrinterController {
 
   @ApiOperation({ summary: '3D 프린터 연결 해제' })
   @ApiBody({ type: ConnectionDTO })
+  @Post('disconnection')
   async disconnectHardware(@Body() dto: ConnectionDTO): Promise<ResponseDTO> {
     return {
       ...PrinterSuccessCode.DISCONNECTED,

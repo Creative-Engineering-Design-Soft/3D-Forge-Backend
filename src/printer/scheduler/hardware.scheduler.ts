@@ -11,7 +11,7 @@ export class HardwareScheduler {
     private readonly hardwareService: HardwareService,
   ) {}
 
-  @Interval(1000) // 5초 마다
+  /*@Interval(1000) // 5초 마다
   async handleInterval() {
     const printers: Printer[] = await this.printerService.find({
       isConnected: true,
@@ -21,5 +21,5 @@ export class HardwareScheduler {
       Object.assign(printer, dto);
       await this.printerService.save(printer);
     }
-  }
+  }*/
 }

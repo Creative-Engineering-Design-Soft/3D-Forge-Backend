@@ -16,6 +16,7 @@ import {
 } from './dto/hardware.req.dto';
 import { HardwareService } from './hardware.service';
 import { ModelService } from '../model/model.service';
+import { PrinterConverter } from './converter/printer.converter.dto';
 
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
@@ -41,6 +42,15 @@ export class PrinterService extends BaseService<Printer> {
         `id가 '${hardwareId}'인 디바이스는 연결 상태가 false 입니다.`,
       );
     return printer;
+  }
+
+  async findByUserId(userId: number) {
+    const printers = await this.find({ user: { id: userId } });
+    const result = [];
+    for (let i = 0; i < printers.length; i++) {
+      result.push(PrinterConverter.toPrinterResDTO(printers[i]));
+    }
+    return result;
   }
 
   async getStatus(hardwareId: string) {

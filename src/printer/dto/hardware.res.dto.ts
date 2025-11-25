@@ -11,6 +11,21 @@ export class ConnectionResDTO {
   address: string;
 }
 
+export class PrinterResDTO {
+  @ApiProperty()
+  id: number;
+  @ApiProperty()
+  name: string;
+  @ApiProperty()
+  hardwareId: string;
+  @ApiProperty()
+  address: string;
+  @ApiProperty()
+  isConnected: boolean;
+  @ApiProperty()
+  isPrinting: boolean;
+}
+
 export class StatusResDTO {
   @ApiProperty()
   hardwareId: string;
