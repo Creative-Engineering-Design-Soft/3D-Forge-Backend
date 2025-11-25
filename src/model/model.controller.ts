@@ -16,7 +16,13 @@ import { ModelService } from './model.service';
 import { LoginGuard } from '../auth/security/auth.guard';
 import { UserId } from '../auth/decorator/auth.decorator';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiResponseArrayType,
+  ApiResponseType,
+  ResponseDTO,
+} from '../common/apiPayload/reponse.dto';
+import { ModelResDTO, UploadResDTO } from './dto/model.res.dto';
 
 const fileSizeLimit = 100 * 1024 * 1024; // 100MB
 const fileInterceptorOption = FileInterceptor('file', {
@@ -42,36 +48,43 @@ const fileInterceptorOption = FileInterceptor('file', {
     callback(null, true);
   },
 });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const modelUploadPath = process.env.MODEL_UPLOAD_PATH ?? '/public';
 
 @Controller('models')
+@ApiExtraModels(ResponseDTO, UploadResDTO)
 export class ModelController {
   private readonly logger = new Logger('Model');
 
   constructor(private modelService: ModelService) {}
 
   @ApiOperation({ summary: '모델 파일 업로드' })
+  @ApiResponseType(UploadResDTO, 200)
   @Post('uploads')
   @UseGuards(LoginGuard)
   @UseInterceptors(fileInterceptorOption)
-  uploadFile(
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @UserId() userId: number,
   ) {
     const filename = file.filename;
     this.logger.log(`Uploaded '${filename}'`);
-    this.modelService.save({
+    const model = await this.modelService.save({
       name: filename,
       filePath: file.path,
       user: { id: userId },
     });
     return {
       ...GeneralSuccessCode.CREATED,
-      result: { filePath: `${modelUploadPath}/${file.filename}` },
+      result: {
+        filePath: model.filePath,
+        id: model.id,
+      },
     };
   }
 
   @ApiOperation({ summary: '내가 업로드한 모델 파일 목록' })
+  @ApiResponseArrayType(ModelResDTO, 200)
   @Get('me')
   @UseGuards(LoginGuard)
   async getMyFiles(@UserId() userId: number) {
@@ -82,6 +95,7 @@ export class ModelController {
   }
 
   @ApiOperation({ summary: '특정 모델 파일 정보' })
+  @ApiResponseType(ModelResDTO, 200)
   @Get(':id')
   @UseGuards(LoginGuard)
   async getFileData(@UserId() userId: number, @Param('id') id: number) {

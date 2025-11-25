@@ -3,6 +3,7 @@ import { BaseService } from '../common/service/base.service';
 import { Model } from './entity/model.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ModelConverter } from './converter/model.converter.dto';
 
 @Injectable()
 export class ModelService extends BaseService<Model> {
@@ -10,8 +11,9 @@ export class ModelService extends BaseService<Model> {
     super(repo);
   }
 
-  findByUserID(userId: number) {
-    return this.find({ user: { id: userId } });
+  async findByUserID(userId: number) {
+    const models = await this.find({ user: { id: userId } });
+    return ModelConverter.toModelListResDTO(models);
   }
 
   async findOwn(userId: number, id: number) {
@@ -21,12 +23,6 @@ export class ModelService extends BaseService<Model> {
     });
     if (!result || !result.user || result.user.id !== userId)
       throw new ForbiddenException('해당 파일에 대한 접근 권한이 없습니다.');
-    return {
-      id: result.id,
-      name: result.name,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
-      filePath: result.filePath,
-    };
+    return ModelConverter.toModelResDTO(result);
   }
 }

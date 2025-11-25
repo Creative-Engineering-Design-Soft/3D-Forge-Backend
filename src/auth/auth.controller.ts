@@ -17,13 +17,15 @@ import {
   LoginUserReqDTO,
   OAuthDTO,
 } from './dto/user.req.dto';
-import { ResponseDTO } from '../common/apiPayload/reponse.dto';
+import { ApiResponseType, ResponseDTO } from '../common/apiPayload/reponse.dto';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import { UserId } from './decorator/auth.decorator';
 import { LoginGuard } from './security/auth.guard';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiExtraModels, ApiOperation } from '@nestjs/swagger';
+import { CreateUserResDTO, JwtPayloadResDTO } from './dto/user.res.dto';
 
 @Controller('auth')
+@ApiExtraModels(ResponseDTO, JwtPayloadResDTO, CreateUserResDTO)
 export class AuthController {
   private readonly logger = new Logger('Auth');
 
@@ -31,9 +33,11 @@ export class AuthController {
 
   @ApiOperation({ summary: '로그인' })
   @ApiBody({ type: LoginUserReqDTO })
-  @ApiResponse({ status: 200, description: '성공적으로 조회됨' })
+  @ApiResponseType(JwtPayloadResDTO, 200)
   @Post('login')
-  async login(@Body() dto: LoginUserReqDTO): Promise<ResponseDTO> {
+  async login(
+    @Body() dto: LoginUserReqDTO,
+  ): Promise<ResponseDTO<JwtPayloadResDTO>> {
     if (!dto.email || !dto.password)
       throw new BadRequestException(
         '이메일 또는 비밀번호를 입력하여야 합니다.',
@@ -47,9 +51,11 @@ export class AuthController {
 
   @ApiOperation({ summary: '회원가입' })
   @ApiBody({ type: CreateUserReqDTO })
-  @ApiResponse({ status: 201, description: '성공적으로 생성됨' })
+  @ApiResponseType(CreateUserResDTO, 200)
   @Post('register')
-  async register(@Body() dto: CreateUserReqDTO) {
+  async register(
+    @Body() dto: CreateUserReqDTO,
+  ): Promise<ResponseDTO<CreateUserResDTO>> {
     this.logger.log(`${dto.email} 회원가입`);
     const result = await this.authService.register(dto);
     return {
@@ -70,12 +76,13 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Google OAuth Redirection' })
+  @ApiResponseType(JwtPayloadResDTO, 200)
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
   async googleLoginRedirect(
     @Req() req: Request,
     @Ip() ip: string,
-  ): Promise<ResponseDTO> {
+  ): Promise<ResponseDTO<JwtPayloadResDTO>> {
     this.logger.log(`${ip}에서 Google Redirect 요청`);
     const user = req.user as OAuthDTO;
 

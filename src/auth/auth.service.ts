@@ -9,8 +9,12 @@ import { Payload } from './security/payload.interface';
 import { User } from './entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
-import { JwtPayloadDTO } from './dto/jwt.dto';
-import { CreateUserReqDTO, LoginUserReqDTO, OAuthDTO } from './dto/user.req.dto';
+import {
+  CreateUserReqDTO,
+  LoginUserReqDTO,
+  OAuthDTO,
+} from './dto/user.req.dto';
+import { JwtPayloadResDTO } from './dto/user.res.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +51,7 @@ export class AuthService {
   }
 
   //SECTION - vaildate
-  async vaildateUser(loginDto: LoginUserReqDTO): Promise<JwtPayloadDTO> {
+  async vaildateUser(loginDto: LoginUserReqDTO): Promise<JwtPayloadResDTO> {
     const user = await this.userService.findOne({ email: loginDto.email });
     // 이메일 존재 X
     if (!user)
@@ -72,14 +76,14 @@ export class AuthService {
 
   vaildateToken(jwtString: string): Payload | false {
     try {
-      const payload = jwt.verify(jwtString, process.env.JWTKEY as string);
+      const payload = jwt.verify(jwtString, process.env.JWTKEY);
       return payload as Payload;
     } catch {
       return false;
     }
   }
 
-  async vaildateOAuth(oauthDto: OAuthDTO): Promise<JwtPayloadDTO> {
+  async vaildateOAuth(oauthDto: OAuthDTO): Promise<JwtPayloadResDTO> {
     const user = await this.userService.findOneOrThrow({
       email: oauthDto.email,
     });

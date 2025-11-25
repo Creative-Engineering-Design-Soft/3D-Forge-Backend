@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import {
-  SuccessConnectionDTO,
-  SuccessStatusDTO,
-  SuccessUploadDTO,
+  ConnectionResDTO,
+  StatusResDTO,
+  UploadResDTO,
 } from './dto/hardware.res.dto';
 
 @Injectable()
@@ -28,15 +28,15 @@ export class HardwareService {
     return response.data;
   }
 
-  async connect(address: string): Promise<SuccessConnectionDTO> {
+  async connect(address: string): Promise<ConnectionResDTO> {
     return await this.makeGetAPI(address, '/connection');
   }
 
-  async getStatus(address: string): Promise<SuccessStatusDTO> {
+  async getStatus(address: string): Promise<StatusResDTO> {
     return await this.makeGetAPI(address, '/status');
   }
 
-  async sendGCode(address: string, gcode: string): Promise<SuccessUploadDTO> {
+  async sendGCode(address: string, gcode: string): Promise<UploadResDTO> {
     return await this.makePostAPI(address, '/upload', {
       type: 'GCODE',
       filename: 'Test',
