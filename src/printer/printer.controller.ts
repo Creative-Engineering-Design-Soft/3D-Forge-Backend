@@ -25,9 +25,10 @@ import {
   StatusResDTO,
   UploadResDTO,
 } from './dto/hardware.res.dto';
+import { PrinterSuccessCode } from './exception/code/success.code';
 
 @Controller('printers')
-@ApiExtraModels(ResponseDTO, UploadFileDTO, ConnectionResDTO, StatusResDTO)
+@ApiExtraModels(ResponseDTO, UploadResDTO, ConnectionResDTO, StatusResDTO)
 export class PrinterController {
   constructor(private printerService: PrinterService) {}
 
@@ -73,7 +74,10 @@ export class PrinterController {
     @UserId() userId: number,
     @Body() dto: UploadFileDTO,
   ) {
-    return this.printerService.uploadFile(hardwareId, userId, dto);
+    return {
+      ...PrinterSuccessCode.OPERATED,
+      result: this.printerService.uploadFile(hardwareId, userId, dto),
+    };
   }
 
   // Hardware Side
@@ -90,7 +94,7 @@ export class PrinterController {
       address: ip,
     });
     return {
-      ...GeneralSuccessCode.OK,
+      ...PrinterSuccessCode.CONNECTED,
       result: {
         id: printer.id,
         hardwareId: printer.hardwareId,
@@ -104,7 +108,7 @@ export class PrinterController {
   @ApiBody({ type: ConnectionDTO })
   async disconnectHardware(@Body() dto: ConnectionDTO): Promise<ResponseDTO> {
     return {
-      ...GeneralSuccessCode.OK,
+      ...PrinterSuccessCode.DISCONNECTED,
       result: await this.printerService.onExitDevice(dto),
     };
   }

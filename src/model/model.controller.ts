@@ -52,7 +52,7 @@ const fileInterceptorOption = FileInterceptor('file', {
 const modelUploadPath = process.env.MODEL_UPLOAD_PATH ?? '/public';
 
 @Controller('models')
-@ApiExtraModels(ResponseDTO, UploadResDTO)
+@ApiExtraModels(ResponseDTO, UploadResDTO, ModelResDTO)
 export class ModelController {
   private readonly logger = new Logger('Model');
 
