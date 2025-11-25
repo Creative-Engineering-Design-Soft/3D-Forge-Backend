@@ -1,5 +1,6 @@
 # Size Save
 /public/upload
+/env
 
 # compiled output
 /dist
