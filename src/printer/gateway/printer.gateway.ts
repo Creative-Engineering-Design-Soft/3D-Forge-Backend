@@ -36,7 +36,14 @@ export class PrinterGateway {
       hardwareId: dto.hardwareId,
       address: client.id,
     });
-    this.logger.log(`Printer[hid=${dto.hardwareId}] online on '${client.id}'`);
+    this.logger.log(
+      `Printer[hid='${dto.hardwareId}'] online on '${client.id}'`,
+    );
+  }
+
+  sendTest(hardwareId: string) {
+    this.logger.log('Watch out!!');
+    this.server.to(hardwareId).emit('test', { test: 'Hello World!' });
   }
 
   sendPrintCommand(hardwareId: string, fileUrl: string) {

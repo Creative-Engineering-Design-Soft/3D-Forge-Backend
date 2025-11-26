@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import {
@@ -23,11 +31,15 @@ import {
   UploadResDTO,
 } from './dto/hardware.res.dto';
 import { PrinterSuccessCode } from './exception/code/success.code';
+import { PrinterGateway } from './gateway/printer.gateway';
 
 @Controller('printers')
 @ApiExtraModels(ResponseDTO, UploadResDTO, ConnectionResDTO, StatusResDTO)
 export class PrinterController {
-  constructor(private printerService: PrinterService) {}
+  constructor(
+    private printerService: PrinterService,
+    private gateway: PrinterGateway,
+  ) {}
 
   // User Side
   @ApiOperation({ summary: '내 3D 프린터 조회' })
@@ -43,7 +55,7 @@ export class PrinterController {
 
   @ApiOperation({ summary: '3D 프린터 조회' })
   @ApiQuery({ name: 'hardwareId', required: true, example: '0000-0000' })
-  @Get(':hardwareId')
+  @Get('test2/:hardwareId')
   getPrinterInfo(@Param('hardwareId') hardwareId: number) {
     return hardwareId;
   }
@@ -86,6 +98,11 @@ export class PrinterController {
       ...PrinterSuccessCode.OPERATED,
       result: this.printerService.uploadFile(hardwareId, userId, dto),
     };
+  }
+
+  @Get('test')
+  testt(@Query('id') id: string) {
+    this.gateway.sendTest(id);
   }
 
   // Hardware Side

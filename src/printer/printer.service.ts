@@ -25,7 +25,6 @@ export class PrinterService extends BaseService<Printer> {
 
   constructor(
     private readonly hardwareService: HardwareService,
-    private readonly printerGateway: PrinterGateway,
     private readonly modelService: ModelService,
     @InjectRepository(Printer) repo: Repository<Printer>,
   ) {
