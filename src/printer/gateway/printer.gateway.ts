@@ -67,7 +67,6 @@ export class PrinterGateway {
 
   @OnEvent('printer.upload')
   handlePrinterUploadEvent(payload: { hardwareId: string; filepath: string }) {
-    // TODO: file
     this.logger.log(`upload Printer[hid='${payload.hardwareId}']`);
     this.server
       .to(payload.hardwareId)
