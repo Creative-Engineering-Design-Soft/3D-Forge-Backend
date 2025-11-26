@@ -50,13 +50,27 @@ export class PrinterGateway {
   }
 
   // SECTION - Sender
+  reqeustStatus(hardwareId: string) {
+    this.server.to(hardwareId).emit('status', {});
+  }
+
   @OnEvent('printer.test')
   handlePrinterTestEvent(payload: { hardwareId: string }) {
     this.logger.log(`test Printer[hid='${payload.hardwareId}']`);
     this.server.to(payload.hardwareId).emit('test', { test: 'Hello World!' });
   }
 
-  reqeustStatus(hardwareId: string) {
-    this.server.to(hardwareId).emit('status', {});
+  @OnEvent('printer.command')
+  handlePrinterCommandEvent(payload: { hardwareId: string; status: string }) {
+    this.logger.log(`command Printer[hid='${payload.hardwareId}']`);
+  }
+
+  @OnEvent('printer.upload')
+  handlePrinterUploadEvent(payload: { hardwareId: string; filepath: string }) {
+    // TODO: file
+    this.logger.log(`upload Printer[hid='${payload.hardwareId}']`);
+    this.server
+      .to(payload.hardwareId)
+      .emit('upload', { filepath: payload.filepath });
   }
 }

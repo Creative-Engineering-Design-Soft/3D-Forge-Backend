@@ -41,13 +41,6 @@ export class PrinterController {
     };
   }
 
-  @ApiOperation({ summary: '3D 프린터 조회' })
-  @ApiQuery({ name: 'hardwareId', required: true, example: '0000-0000' })
-  @Get(':hardwareId')
-  getPrinterInfo(@Param('hardwareId') hardwareId: string) {
-    return hardwareId;
-  }
-
   @ApiOperation({ summary: '3D 프린터 상태 조회' })
   @ApiQuery({ name: 'hardwareId', required: true, example: '0000-0000' })
   @ApiResponseType(StatusResDTO, 200)

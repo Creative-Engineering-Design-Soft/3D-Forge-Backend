@@ -15,13 +15,10 @@ export class Printer extends TimeBaseEntity {
 
   @ManyToOne(() => User, (user) => user.printers)
   user: User;
-
   @Column()
   name: string;
-
   @Column()
   address: string;
-
   @Column()
   hardwareId: string;
 

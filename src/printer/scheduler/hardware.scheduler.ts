@@ -12,7 +12,8 @@ export class HardwareScheduler {
     private readonly printerGateway: PrinterGateway,
   ) {}
 
-  @Interval(3000) // 3초 마다
+  // TODO: 1번만 작동함
+  @Interval(5000) // 3초 마다
   async handleInterval() {
     const printers: Printer[] = await this.printerService.find({
       isConnected: true,

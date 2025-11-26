@@ -97,10 +97,10 @@ export class PrinterService extends BaseService<Printer> {
   async uploadFile(hardwareId: string, userId: number, dto: UploadFileDTO) {
     const hardware = await this.findOneOrThrow(hardwareId);
     const model = await this.modelService.findOwn(userId, dto.modelId);
-    return await this.hardwareService.sendGCode(
-      hardware.address,
-      model.filePath,
-    );
+    this.eventEmitter.emit('printer.upload', {
+      hardwareId,
+      filepath: model.filePath,
+    });
   }
 
   async updateStatus(dto: StatusReqDTO) {
@@ -111,7 +111,12 @@ export class PrinterService extends BaseService<Printer> {
       );
       return;
     }
-    return await this.repository.update(printer.id, dto);
+
+    return await this.repository.update(printer.id, {
+      ...dto,
+      isPrinting: Boolean(dto.isPrinting),
+      isConnected: Boolean(dto.isConnected),
+    });
   }
 
   sendTest(hardwareId: string) {
