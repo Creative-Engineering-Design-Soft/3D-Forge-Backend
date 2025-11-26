@@ -33,7 +33,7 @@ async function bootstrap() {
   });
 
   app.useStaticAssets(join(__dirname, '..', 'public'), {
-    prefix: '/public',
+    prefix: '/public/', // URL 경로
   });
 
   const PORT = process.env.PORT ?? 3000;

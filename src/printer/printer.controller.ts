@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Ip,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import {
@@ -14,7 +6,7 @@ import {
   ApiResponseType,
   ResponseDTO,
 } from '../common/apiPayload/reponse.dto';
-import { ConnectionDTO, UploadFileDTO } from './dto/hardware.req.dto';
+import { UploadFileDTO } from './dto/hardware.req.dto';
 import { LoginGuard } from '../auth/security/auth.guard';
 import { UserId } from '../auth/decorator/auth.decorator';
 import {
@@ -97,7 +89,7 @@ export class PrinterController {
   }
 
   // Hardware Side
-  @ApiOperation({ summary: '3D 프린터 연결' })
+  /*@ApiOperation({ summary: '3D 프린터 연결' })
   @ApiBody({ type: ConnectionDTO })
   @ApiResponseType(ConnectionResDTO, 200)
   @Post('connection')
@@ -105,7 +97,7 @@ export class PrinterController {
     @Ip() ip: string,
     @Body() dto: ConnectionDTO,
   ): Promise<ResponseDTO> {
-    const printer = await this.printerService.onAccessDevice({
+    const printer = await this.printerService.onConnectDevice({
       hardwareId: dto.hardwareId,
       address: ip,
     });
@@ -126,7 +118,7 @@ export class PrinterController {
   async disconnectHardware(@Body() dto: ConnectionDTO): Promise<ResponseDTO> {
     return {
       ...PrinterSuccessCode.DISCONNECTED,
-      result: await this.printerService.onExitDevice(dto),
+      result: await this.printerService.onDisconnectDevice(dto),
     };
-  }
+  }*/
 }

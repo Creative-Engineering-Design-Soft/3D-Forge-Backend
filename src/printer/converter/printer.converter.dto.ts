@@ -3,7 +3,6 @@ import { Printer } from '../entity/printer.entity';
 
 export class PrinterConverter {
   static toPrinterResDTO(this: void, entity: Printer): PrinterResDTO {
-    console.log(entity);
     return {
       id: entity.id,
       name: entity.name,

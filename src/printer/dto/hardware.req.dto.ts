@@ -13,7 +13,7 @@ export class UploadFileDTO {
 export class ConnectionDTO {
   @ApiProperty({ example: '0000-0000' })
   @IsNotEmpty()
-  hardwareId: string;
+  address: string;
 }
 
 export class AccessDTO {

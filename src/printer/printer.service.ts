@@ -17,6 +17,7 @@ import {
 import { HardwareService } from './hardware.service';
 import { ModelService } from '../model/model.service';
 import { PrinterConverter } from './converter/printer.converter.dto';
+import { PrinterGateway } from './gateway/printer.gateway';
 
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
@@ -24,6 +25,7 @@ export class PrinterService extends BaseService<Printer> {
 
   constructor(
     private readonly hardwareService: HardwareService,
+    private readonly printerGateway: PrinterGateway,
     private readonly modelService: ModelService,
     @InjectRepository(Printer) repo: Repository<Printer>,
   ) {
@@ -59,15 +61,18 @@ export class PrinterService extends BaseService<Printer> {
   }
 
   // SECTION - Hardware Side
-  async onAccessDevice(dto: AccessDTO) {
+  async onConnectDevice(dto: AccessDTO) {
     if (!dto.hardwareId)
       throw new BadRequestException('hardwareId의 값이 존재하지 않습니다');
 
     let printer = await this.findOne({ hardwareId: dto.hardwareId });
     if (!printer) {
-      this.logger.log(`new device[id: ${dto.hardwareId}] on ${dto.address}`);
+      this.logger.verbose(
+        `new device[id: ${dto.hardwareId}] on ${dto.address}`,
+      );
       printer = new Printer();
       printer.hardwareId = dto.hardwareId;
+      printer.name = dto.hardwareId;
     }
 
     printer.address = dto.address;
@@ -76,11 +81,11 @@ export class PrinterService extends BaseService<Printer> {
     return await this.save(printer);
   }
 
-  async onExitDevice(dto: ConnectionDTO) {
-    const printer = await this.findOne({ hardwareId: dto.hardwareId });
+  async onDisconnectDevice(dto: ConnectionDTO) {
+    const printer = await this.findOne({ address: dto.address });
     if (!printer)
       throw new NotFoundException(
-        `hardwareId가 ${dto.hardwareId}인 디바이스가 존재하지 않습니다`,
+        `address가 ${dto.address}인 디바이스가 존재하지 않습니다`,
       );
     printer.isConnected = false;
     await this.save(printer);

@@ -25,21 +25,21 @@ export class Printer extends TimeBaseEntity {
   @Column()
   hardwareId: string;
 
-  @Column()
+  @Column({ default: false })
   isPrinting: boolean;
-  @Column()
+  @Column({ default: false })
   isConnected: boolean;
 
-  @Column()
+  @Column({ default: 0 })
   nozzleTemp: number;
-  @Column()
+  @Column({ default: 0 })
   bedTemp: number;
 
-  @Column()
+  @Column({ default: 0 })
   x: number;
-  @Column()
+  @Column({ default: 0 })
   y: number;
-  @Column()
+  @Column({ default: 0 })
   z: number;
 
   @DeleteDateColumn({ name: 'deleted_at' })

@@ -6,10 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Printer } from './entity/printer.entity';
 import { HardwareScheduler } from './scheduler/hardware.scheduler';
 import { ModelModule } from '../model/model.module';
+import { PrinterGateway } from './gateway/printer.gateway';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Printer]), ModelModule],
   controllers: [PrinterController],
-  providers: [PrinterService, HardwareService, HardwareScheduler],
+  providers: [
+    PrinterService,
+    HardwareService,
+    HardwareScheduler,
+    PrinterGateway,
+  ],
 })
 export class PrinterModule {}
