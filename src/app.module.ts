@@ -12,6 +12,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { Printer } from './printer/entity/printer.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         synchronize: true,
       }),
     }),
+    EventEmitterModule.forRoot(),
     PrinterModule,
     ModelModule,
     ScheduleModule.forRoot(),

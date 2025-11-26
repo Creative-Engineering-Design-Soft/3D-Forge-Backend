@@ -26,3 +26,14 @@ export class AccessDTO {
   @IsString()
   address: string;
 }
+
+export interface StatusReqDTO {
+  hardwareId: string;
+  bedTemp: number;
+  nozzleTemp: number;
+  isPrinting: boolean;
+  isConnected: boolean;
+  x: number;
+  y: number;
+  z: number;
+}

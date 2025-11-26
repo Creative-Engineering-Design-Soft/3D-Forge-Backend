@@ -8,6 +8,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { PrinterService } from '../printer.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { StatusReqDTO } from '../dto/hardware.req.dto';
 
 @WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class PrinterGateway {
@@ -25,7 +27,7 @@ export class PrinterGateway {
     this.logger.log(`Printer[hid=???] offline on '${client.id}'`);
   }
 
-  // SECTION - Custom
+  // SECTION - Receiver
   @SubscribeMessage('register')
   handleRegister(
     @MessageBody() dto: { hardwareId: string },
@@ -41,13 +43,20 @@ export class PrinterGateway {
     );
   }
 
-  sendTest(hardwareId: string) {
-    this.logger.log('Watch out!!');
-    this.server.to(hardwareId).emit('test', { test: 'Hello World!' });
+  @SubscribeMessage('status')
+  async handleStatus(@MessageBody() dto: StatusReqDTO) {
+    await this.printerService.updateStatus(dto);
+    this.logger.verbose(`Printer[hid='${dto.hardwareId}'] updated`);
   }
 
-  sendPrintCommand(hardwareId: string, fileUrl: string) {
-    this.logger.log('Sending print command:', hardwareId, fileUrl);
-    this.server.to(hardwareId).emit('print', { fileUrl });
+  // SECTION - Sender
+  @OnEvent('printer.test')
+  handlePrinterTestEvent(payload: { hardwareId: string }) {
+    this.logger.log(`test Printer[hid='${payload.hardwareId}']`);
+    this.server.to(payload.hardwareId).emit('test', { test: 'Hello World!' });
+  }
+
+  reqeustStatus(hardwareId: string) {
+    this.server.to(hardwareId).emit('status', {});
   }
 }

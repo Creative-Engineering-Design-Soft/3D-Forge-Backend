@@ -12,12 +12,14 @@ import { BaseService } from '../common/service/base.service';
 import {
   AccessDTO,
   ConnectionDTO,
+  StatusReqDTO,
   UploadFileDTO,
 } from './dto/hardware.req.dto';
 import { HardwareService } from './hardware.service';
 import { ModelService } from '../model/model.service';
 import { PrinterConverter } from './converter/printer.converter.dto';
 import { PrinterGateway } from './gateway/printer.gateway';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
@@ -26,6 +28,7 @@ export class PrinterService extends BaseService<Printer> {
   constructor(
     private readonly hardwareService: HardwareService,
     private readonly modelService: ModelService,
+    private readonly eventEmitter: EventEmitter2,
     @InjectRepository(Printer) repo: Repository<Printer>,
   ) {
     super(repo);
@@ -98,5 +101,20 @@ export class PrinterService extends BaseService<Printer> {
       hardware.address,
       model.filePath,
     );
+  }
+
+  async updateStatus(dto: StatusReqDTO) {
+    const printer = await this.findOne({ hardwareId: dto.hardwareId });
+    if (!printer) {
+      this.logger.error(
+        `[PrinterService.updateStatus] NotFound '${dto.hardwareId}'`,
+      );
+      return;
+    }
+    return await this.repository.update(printer.id, dto);
+  }
+
+  sendTest(hardwareId: string) {
+    this.eventEmitter.emit('printer.test', { hardwareId });
   }
 }
