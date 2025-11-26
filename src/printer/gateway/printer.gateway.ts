@@ -9,7 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { PrinterService } from '../printer.service';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class PrinterGateway {
   private readonly logger = new Logger('PrinterGateway');
 
