@@ -10,6 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { PrinterService } from '../printer.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { StatusReqDTO } from '../dto/hardware.req.dto';
+import { Operator } from '../enum/printer.enum';
 
 @WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class PrinterGateway {
@@ -71,5 +72,18 @@ export class PrinterGateway {
     this.server
       .to(payload.hardwareId)
       .emit('upload', { filepath: payload.filepath });
+  }
+
+  @OnEvent('printer.operate')
+  handlePrinterOperatorEvent(payload: {
+    hardwareId: string;
+    operator: Operator;
+  }) {
+    this.logger.log(
+      `operate Printer[hid='${payload.hardwareId}'] ${payload.operator}`,
+    );
+    this.server
+      .to(payload.hardwareId)
+      .emit('operate', { operater: payload.operator });
   }
 }

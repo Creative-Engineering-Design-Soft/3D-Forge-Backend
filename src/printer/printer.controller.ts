@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import {
@@ -6,7 +14,7 @@ import {
   ApiResponseType,
   ResponseDTO,
 } from '../common/apiPayload/reponse.dto';
-import { UploadFileDTO } from './dto/hardware.req.dto';
+import { OperationReqDTO, UploadFileDTO } from './dto/hardware.req.dto';
 import { LoginGuard } from '../auth/security/auth.guard';
 import { UserId } from '../auth/decorator/auth.decorator';
 import {
@@ -78,6 +86,24 @@ export class PrinterController {
     return {
       ...PrinterSuccessCode.OPERATED,
       result: this.printerService.uploadFile(hardwareId, userId, dto),
+    };
+  }
+
+  @ApiOperation({ summary: '3D 프린터 조작' })
+  @ApiBody({ type: OperationReqDTO })
+  @ApiResponse({ status: 200, description: '수행 완료' })
+  @ApiResponse({ status: 403, description: '사용 권한 없음' })
+  @ApiResponse({ status: 409, description: '알 수 없는 오류' })
+  @Patch(':hardwareId')
+  @UseGuards(LoginGuard)
+  operate(
+    @Param('hardwareId') hardwareId: string,
+    @UserId() userId: number,
+    @Body() dto: OperationReqDTO,
+  ) {
+    return {
+      ...PrinterSuccessCode.OPERATED,
+      result: this.printerService.operate(hardwareId, dto),
     };
   }
 

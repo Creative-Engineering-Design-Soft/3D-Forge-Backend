@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { Operator } from '../enum/printer.enum';
 
 // User Side
 export class UploadFileDTO {
@@ -36,4 +37,10 @@ export interface StatusReqDTO {
   x: number;
   y: number;
   z: number;
+}
+
+export class OperationReqDTO {
+  @IsNotEmpty()
+  @IsEnum(Operator)
+  operator: Operator;
 }

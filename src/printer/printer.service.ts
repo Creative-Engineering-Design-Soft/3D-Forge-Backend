@@ -12,6 +12,7 @@ import { BaseService } from '../common/service/base.service';
 import {
   AccessDTO,
   ConnectionDTO,
+  OperationReqDTO,
   StatusReqDTO,
   UploadFileDTO,
 } from './dto/hardware.req.dto';
@@ -116,6 +117,14 @@ export class PrinterService extends BaseService<Printer> {
       ...dto,
       isPrinting: Boolean(dto.isPrinting),
       isConnected: Boolean(dto.isConnected),
+    });
+  }
+
+  async operate(hardwareId: string, dto: OperationReqDTO) {
+    const hardware = await this.findOneOrThrow(hardwareId);
+    this.eventEmitter.emit('printer.operate', {
+      hardwareId,
+      ...dto,
     });
   }
 
