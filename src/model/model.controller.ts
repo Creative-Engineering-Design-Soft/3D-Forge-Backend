@@ -29,6 +29,7 @@ const fileInterceptorOption = FileInterceptor('file', {
   storage: diskStorage({
     destination: './data/uploads/models',
     filename: (req, file, callback) => {
+      console.log('file', file);
       const name = file.originalname.split('.')[0]; // 이름만
       const fileExt = extname(file.originalname); // .stl
       const timestamp = Date.now();
@@ -37,6 +38,7 @@ const fileInterceptorOption = FileInterceptor('file', {
   }),
   limits: { fileSize: fileSizeLimit },
   fileFilter: (req, file, callback) => {
+    console.log('file2', file);
     const allowedExt = ['.stl', '.gcode', '.obg'];
     const ext = extname(file.originalname).toLowerCase();
     if (!allowedExt.includes(ext)) {
