@@ -97,11 +97,10 @@ export class ModelController {
   @ApiOperation({ summary: '특정 모델 파일 정보' })
   @ApiResponseType(ModelResDTO, 200)
   @Get(':id')
-  @UseGuards(LoginGuard)
-  async getFileData(@UserId() userId: number, @Param('id') id: number) {
+  async getFileData(@Param('id') id: number) {
     return {
       ...GeneralSuccessCode.OK,
-      result: await this.modelService.findOwn(userId, id),
+      result: await this.modelService.findOne({ id }),
     };
   }
 }
