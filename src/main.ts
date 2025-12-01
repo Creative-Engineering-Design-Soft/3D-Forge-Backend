@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as express from 'express';
 
 import * as dotenv from 'dotenv';
 import { join } from 'path';
@@ -35,6 +36,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public/', // URL 경로
   });
+  app.use('/files', express.static('/data/uploads/models'));
 
   const PORT = process.env.PORT ?? 3000;
   logger.log(`Server is running on localhost:${PORT}`);

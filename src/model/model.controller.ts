@@ -27,7 +27,7 @@ import { ModelResDTO, UploadResDTO } from './dto/model.res.dto';
 const fileSizeLimit = 100 * 1024 * 1024; // 100MB
 const fileInterceptorOption = FileInterceptor('file', {
   storage: diskStorage({
-    destination: './public/upload/model',
+    destination: './data/uploads/models',
     filename: (req, file, callback) => {
       const name = file.originalname.split('.')[0]; // 이름만
       const fileExt = extname(file.originalname); // .stl
