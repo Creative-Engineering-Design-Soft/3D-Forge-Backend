@@ -36,6 +36,12 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public/', // URL 경로
   });
+  app.useStaticAssets(join(__dirname, '..', 'public/upload/model/'), {
+    prefix: '/files2/', // URL 경로
+  });
+  app.useStaticAssets(join(__dirname, '..', 'data'), {
+    prefix: '/data/', // URL 경로
+  });
   app.use('/files', express.static('/data/uploads/models'));
 
   const PORT = process.env.PORT ?? 3000;
