@@ -13,7 +13,7 @@ export class AppController {
 
   @Get('test')
   async getTest() {
-    const dir = './public/upload/model';
+    const dir = './data/uploads/models';
     const files = await readdir(dir);
 
     return files;
@@ -21,7 +21,7 @@ export class AppController {
 
   @Get('test2')
   async getTest2() {
-    const dir = '/public/upload/model';
+    const dir = '/data/uploads/models';
     const files = await readdir(dir);
 
     return files;
