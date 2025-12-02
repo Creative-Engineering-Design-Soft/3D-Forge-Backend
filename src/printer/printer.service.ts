@@ -92,8 +92,8 @@ export class PrinterService extends BaseService<Printer> {
         `address가 ${dto.address}인 디바이스가 존재하지 않습니다`,
       );
     printer.isConnected = false;
-    await this.save(printer);
-    return 'OK';
+
+    return await this.save(printer);
   }
 
   async uploadFile(hardwareId: string, userId: number, dto: UploadFileDTO) {

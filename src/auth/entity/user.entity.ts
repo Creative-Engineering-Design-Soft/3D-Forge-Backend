@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Model } from '../../model/entity/model.entity';
 import { Printer } from '../../printer/entity/printer.entity';
+import { Log } from '../../log/entity/log.entity';
 
 @Entity()
 export class User {
@@ -21,4 +22,7 @@ export class User {
 
   @OneToMany(() => Printer, (printer) => printer.user)
   printers: Printer[];
+
+  @OneToMany(() => Log, (log) => log.user)
+  logs: Log[];
 }

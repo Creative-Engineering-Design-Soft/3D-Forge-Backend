@@ -11,20 +11,33 @@ import { PrinterService } from '../printer.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { StatusReqDTO } from '../dto/hardware.req.dto';
 import { Operator } from '../enum/printer.enum';
+import { LogService } from '../../log/log.service';
+import { LogEventType } from '../../log/enum/log-event.enum';
 
 @WebSocketGateway({ cors: true, transports: ['websocket'] })
 export class PrinterGateway {
   private readonly logger = new Logger('PrinterGateway');
 
-  constructor(private readonly printerService: PrinterService) {}
+  constructor(
+    private readonly printerService: PrinterService,
+    private readonly logService: LogService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
   // SECTION - Override
   handleConnection() {}
-  handleDisconnect(client: Socket) {
-    this.printerService.onDisconnectDevice({ address: client.id });
+  async handleDisconnect(client: Socket) {
+    const printer = await this.printerService.onDisconnectDevice({
+      address: client.id,
+    });
+    this.logService.insert({
+      printerName: printer.hardwareId,
+      address: client.id,
+      event: LogEventType.DISCONNECT,
+      content: 'OFFLINE',
+    });
     this.logger.log(`Printer[hid=???] offline on '${client.id}'`);
   }
 
@@ -38,6 +51,12 @@ export class PrinterGateway {
     this.printerService.onConnectDevice({
       hardwareId: dto.hardwareId,
       address: client.id,
+    });
+    this.logService.insert({
+      printerName: dto.hardwareId,
+      address: client.id,
+      event: LogEventType.CONNECT,
+      content: 'ONLINE',
     });
     this.logger.log(
       `Printer[hid='${dto.hardwareId}'] online on '${client.id}'`,
@@ -61,13 +80,17 @@ export class PrinterGateway {
     this.server.to(payload.hardwareId).emit('test', { test: 'Hello World!' });
   }
 
-  @OnEvent('printer.command')
-  handlePrinterCommandEvent(payload: { hardwareId: string; status: string }) {
-    this.logger.log(`command Printer[hid='${payload.hardwareId}']`);
-  }
-
   @OnEvent('printer.upload')
-  handlePrinterUploadEvent(payload: { hardwareId: string; filepath: string }) {
+  handlePrinterUploadEvent(
+    @ConnectedSocket() client: Socket,
+    payload: { hardwareId: string; filepath: string },
+  ) {
+    this.logService.insert({
+      printerName: payload.hardwareId,
+      address: client.id,
+      event: LogEventType.UPLOAD,
+      content: payload.filepath,
+    });
     this.logger.log(`upload Printer[hid='${payload.hardwareId}']`);
     this.server
       .to(payload.hardwareId)
@@ -75,10 +98,19 @@ export class PrinterGateway {
   }
 
   @OnEvent('printer.operate')
-  handlePrinterOperatorEvent(payload: {
-    hardwareId: string;
-    operator: Operator;
-  }) {
+  handlePrinterOperatorEvent(
+    @ConnectedSocket() client: Socket,
+    payload: {
+      hardwareId: string;
+      operator: Operator;
+    },
+  ) {
+    this.logService.insert({
+      printerName: payload.hardwareId,
+      address: client.id,
+      event: LogEventType.OPERATE,
+      content: `SET ${payload.operator}`,
+    });
     this.logger.log(
       `operate Printer[hid='${payload.hardwareId}'] ${payload.operator}`,
     );
