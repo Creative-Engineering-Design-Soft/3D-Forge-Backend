@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { TimeBaseEntity } from '../../common/entity/time-base.entity';
 import { User } from '../../auth/entity/user.entity';
+import { Operator } from '../enum/printer.enum';
 
 @Entity()
 export class Printer extends TimeBaseEntity {
@@ -38,6 +39,9 @@ export class Printer extends TimeBaseEntity {
   y: number;
   @Column({ default: 0 })
   z: number;
+
+  @Column({ type: 'enum', enum: Operator, default: Operator.FINISH })
+  status: Operator;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;

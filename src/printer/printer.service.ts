@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -42,10 +43,10 @@ export class PrinterService extends BaseService<Printer> {
       throw new BadRequestException(
         `id가 '${hardwareId}'인 디바이스가 존재하지 않습니다.`,
       );
-    if (!printer.isConnected)
-      throw new BadRequestException(
+    /*if (!printer.isConnected)
+      throw new ConflictException(
         `id가 '${hardwareId}'인 디바이스는 연결 상태가 false 입니다.`,
-      );
+      );*/
     return printer;
   }
 
