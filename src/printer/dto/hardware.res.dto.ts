@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Operator } from '../enum/printer.enum';
 
 export class ConnectionResDTO {
   @ApiProperty()
@@ -24,6 +25,8 @@ export class PrinterResDTO {
   isConnected: boolean;
   @ApiProperty()
   isPrinting: boolean;
+  @ApiProperty()
+  status: Operator;
 }
 
 export class StatusResDTO {

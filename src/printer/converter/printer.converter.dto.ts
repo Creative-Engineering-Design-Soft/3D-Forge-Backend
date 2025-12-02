@@ -10,6 +10,7 @@ export class PrinterConverter {
       address: entity.address,
       isConnected: entity.isConnected,
       isPrinting: entity.isPrinting,
+      status: entity.status,
     };
   }
 
