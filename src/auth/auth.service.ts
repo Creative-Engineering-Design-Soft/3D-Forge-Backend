@@ -23,6 +23,15 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async getMyInfo(userId: number) {
+    const user = await this.userService.getById(userId);
+    return {
+      isLogined: true,
+      id: user.id,
+      name: user.name,
+    };
+  }
+
   userToPayload(user: User): Payload {
     return {
       id: user.id,

@@ -31,6 +31,12 @@ export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
 
+  @Get('me')
+  @UseGuards(LoginGuard)
+  getMyInfo(@UserId() userId: number) {
+    return this.authService.getMyInfo(userId);
+  }
+
   @ApiOperation({ summary: '로그인' })
   @ApiBody({ type: LoginUserReqDTO })
   @ApiResponseType(JwtPayloadResDTO, 200)
