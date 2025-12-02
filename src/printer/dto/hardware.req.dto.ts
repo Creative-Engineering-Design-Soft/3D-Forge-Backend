@@ -38,6 +38,7 @@ export interface StatusReqDTO {
   x: number;
   y: number;
   z: number;
+  percent: number;
 }
 
 export class OperationReqDTO {

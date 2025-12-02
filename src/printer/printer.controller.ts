@@ -66,6 +66,8 @@ export class PrinterController {
         x: result.x,
         y: result.y,
         z: result.z,
+        status: result.status,
+        percent: result.percent,
       },
     };
   }

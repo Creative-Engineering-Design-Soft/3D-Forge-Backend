@@ -39,6 +39,8 @@ export class Printer extends TimeBaseEntity {
   y: number;
   @Column({ default: 0 })
   z: number;
+  @Column({ default: 10 })
+  percent: number;
 
   @Column({ type: 'enum', enum: Operator, default: Operator.FINISH })
   status: Operator;

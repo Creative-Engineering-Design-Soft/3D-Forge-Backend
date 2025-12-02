@@ -46,6 +46,10 @@ export class StatusResDTO {
   y: number;
   @ApiProperty()
   z: number;
+  @ApiProperty()
+  status: Operator;
+  @ApiProperty()
+  percent: number;
 }
 
 export class UploadResDTO {
