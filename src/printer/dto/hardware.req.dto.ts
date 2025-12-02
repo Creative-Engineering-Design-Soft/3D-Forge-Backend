@@ -34,6 +34,7 @@ export interface StatusReqDTO {
   nozzleTemp: number;
   isPrinting: boolean;
   isConnected: boolean;
+  status: Operator;
   x: number;
   y: number;
   z: number;

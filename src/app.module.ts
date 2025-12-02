@@ -13,6 +13,8 @@ import { join } from 'path';
 import { Printer } from './printer/entity/printer.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { LogModule } from './log/log.module';
+import { Log } from './log/entity/log.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [User, Model, Printer],
+        entities: [User, Model, Printer, Log],
         synchronize: true,
       }),
     }),
@@ -41,6 +43,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
