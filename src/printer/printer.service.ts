@@ -88,12 +88,13 @@ export class PrinterService extends BaseService<Printer> {
 
   async onDisconnectDevice(dto: ConnectionDTO) {
     const printer = await this.findOne({ address: dto.address });
-    if (!printer)
-      throw new NotFoundException(
+    if (!printer) {
+      this.logger.error(
         `address가 ${dto.address}인 디바이스가 존재하지 않습니다`,
       );
+      return;
+    }
     printer.isConnected = false;
-
     return await this.save(printer);
   }
 
