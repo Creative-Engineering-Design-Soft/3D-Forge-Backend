@@ -122,7 +122,7 @@ export class PrinterController {
 
   @Get('testt')
   image() {
-    return this.printerService.img;
+    return { ...GeneralSuccessCode.OK, image: this.printerService.img };
   }
 
   // Hardware Side
