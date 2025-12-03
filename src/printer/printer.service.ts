@@ -112,6 +112,7 @@ export class PrinterService extends BaseService<Printer> {
   }
 
   async updateStatus(dto: StatusReqDTO) {
+    console.log(dto);
     const printer = await this.findOne({ hardwareId: dto.hardwareId });
     if (!printer) {
       this.logger.error(
