@@ -33,6 +33,7 @@ export class PrinterGateway {
     const printer = await this.printerService.onDisconnectDevice({
       address: client.id,
     });
+    if (!printer) return;
     this.logger.log(
       `Printer[hid='${printer?.hardwareId}'] offline on '${client.id}'`,
     );
