@@ -84,7 +84,7 @@ export class PrinterGateway {
 
   @SubscribeMessage('stream')
   handleStream(@MessageBody() dto: { hardwareId: string; image: string }) {
-    this.printerService.img = dto.image;
+    this.printerService.saveImage(dto.image);
   }
 
   // SECTION - Sender

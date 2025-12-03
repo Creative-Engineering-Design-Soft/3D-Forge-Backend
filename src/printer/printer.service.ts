@@ -27,7 +27,7 @@ import { Operator } from './enum/printer.enum';
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
   private readonly logger = new Logger('Printer');
-  public img: string;
+  private liveImage: string;
 
   constructor(
     private readonly hardwareService: HardwareService,
@@ -142,5 +142,13 @@ export class PrinterService extends BaseService<Printer> {
 
   sendTest(hardwareId: string) {
     this.eventEmitter.emit('printer.test', { hardwareId });
+  }
+
+  saveImage(imageText: string) {
+    this.liveImage = imageText;
+  }
+
+  getImage() {
+    return this.liveImage;
   }
 }

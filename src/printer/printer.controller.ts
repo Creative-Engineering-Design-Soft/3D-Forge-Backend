@@ -120,9 +120,9 @@ export class PrinterController {
     return this.printerService.sendTest(hardwareId);
   }
 
-  @Get('testt')
+  @Get('image')
   image() {
-    return { ...GeneralSuccessCode.OK, image: this.printerService.img };
+    return { ...GeneralSuccessCode.OK, image: this.printerService.getImage() };
   }
 
   // Hardware Side
