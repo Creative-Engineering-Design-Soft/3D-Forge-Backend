@@ -96,11 +96,17 @@ export class PrinterService extends BaseService<Printer> {
     return await this.save(printer);
   }
 
-  async uploadFile(hardwareId: string, userId: number, dto: UploadFileDTO) {
+  async uploadFile(
+    hardwareId: string,
+    userId: number,
+    address: string,
+    dto: UploadFileDTO,
+  ) {
     await this.findOneOrThrow(hardwareId);
     const model = await this.modelService.findOwn(userId, dto.modelId);
     this.eventEmitter.emit('printer.upload', {
-      hardwareId,
+      hardwareId: hardwareId,
+      address: address,
       filepath: model.filePath,
     });
   }
@@ -121,10 +127,11 @@ export class PrinterService extends BaseService<Printer> {
     });
   }
 
-  async operate(hardwareId: string, dto: OperationReqDTO) {
+  async operate(hardwareId: string, address: string, dto: OperationReqDTO) {
     const hardware = await this.findOneOrThrow(hardwareId);
     this.eventEmitter.emit('printer.operate', {
       hardwareId,
+      address,
       ...dto,
     });
   }

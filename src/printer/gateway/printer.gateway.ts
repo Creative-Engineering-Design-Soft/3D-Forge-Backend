@@ -75,7 +75,7 @@ export class PrinterGateway {
         'printerService.updateStatus를 실행하는 중 오류가 발생하였습니다. (printer.gateway.ts::handleStatus)',
       );
     }
-    this.logger.verbose(`Printer[hid='${dto.hardwareId}'] updated`);
+    this.logger.verbose(`Printer[hid='${dto.hardwareId}'] Updated`);
   }
 
   // SECTION - Sender
@@ -90,38 +90,37 @@ export class PrinterGateway {
   }
 
   @OnEvent('printer.upload')
-  handlePrinterUploadEvent(
-    @ConnectedSocket() client: Socket,
-    payload: { hardwareId: string; filepath: string },
-  ) {
+  handlePrinterUploadEvent(payload: {
+    hardwareId: string;
+    filepath: string;
+    address: string;
+  }) {
     this.logService.insert({
       printerName: payload.hardwareId,
-      address: client.id,
+      address: payload.address,
       event: LogEventType.UPLOAD,
       content: payload.filepath,
     });
-    this.logger.log(`upload Printer[hid='${payload.hardwareId}']`);
+    this.logger.log(`Printer[hid='${payload.hardwareId}'] Uploaded`);
     this.server
       .to(payload.hardwareId)
       .emit('upload', { filepath: payload.filepath });
   }
 
   @OnEvent('printer.operate')
-  handlePrinterOperatorEvent(
-    @ConnectedSocket() client: Socket,
-    payload: {
-      hardwareId: string;
-      operator: Operator;
-    },
-  ) {
+  handlePrinterOperatorEvent(payload: {
+    hardwareId: string;
+    address: string;
+    operator: Operator;
+  }) {
     this.logService.insert({
       printerName: payload.hardwareId,
-      address: client.id,
+      address: payload.address,
       event: LogEventType.OPERATE,
       content: `SET ${payload.operator}`,
     });
     this.logger.log(
-      `operate Printer[hid='${payload.hardwareId}'] ${payload.operator}`,
+      `Printer[hid='${payload.hardwareId}'] Operated ${payload.operator}`,
     );
     this.server
       .to(payload.hardwareId)

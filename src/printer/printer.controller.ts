@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Ip,
   Param,
   Patch,
   Post,
@@ -85,12 +86,13 @@ export class PrinterController {
     @Param('hardwareId') hardwareId: string,
     @UserId() userId: number,
     @Body() dto: UploadFileDTO,
+    @Ip() address: string,
   ) {
     if (!hardwareId)
       throw new BadRequestException('pathVariable에는 hardwareId가 필요합니다');
     return {
       ...PrinterSuccessCode.OPERATED,
-      result: this.printerService.uploadFile(hardwareId, userId, dto),
+      result: this.printerService.uploadFile(hardwareId, userId, address, dto),
     };
   }
 
@@ -104,11 +106,12 @@ export class PrinterController {
   operate(
     @Param('hardwareId') hardwareId: string,
     @UserId() userId: number,
+    @Ip() address: string,
     @Body() dto: OperationReqDTO,
   ) {
     return {
       ...PrinterSuccessCode.OPERATED,
-      result: this.printerService.operate(hardwareId, dto),
+      result: this.printerService.operate(hardwareId, address, dto),
     };
   }
 
