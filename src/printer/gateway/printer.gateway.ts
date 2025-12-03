@@ -28,17 +28,20 @@ export class PrinterGateway {
 
   // SECTION - Override
   handleConnection() {}
+
   async handleDisconnect(client: Socket) {
     const printer = await this.printerService.onDisconnectDevice({
       address: client.id,
     });
+    this.logger.log(
+      `Printer[hid='${printer.hardwareId}'] offline on '${client.id}'`,
+    );
     this.logService.insert({
       printerName: printer.hardwareId,
       address: client.id,
       event: LogEventType.DISCONNECT,
       content: 'OFFLINE',
     });
-    this.logger.log(`Printer[hid=???] offline on '${client.id}'`);
   }
 
   // SECTION - Receiver
