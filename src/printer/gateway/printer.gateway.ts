@@ -37,7 +37,7 @@ export class PrinterGateway {
       `Printer[hid='${printer?.hardwareId}'] offline on '${client.id}'`,
     );
     this.logService.insert({
-      printerName: printer?.hardwareId,
+      printerName: printer?.hardwareId ?? '알 수 없음',
       address: client.id,
       event: LogEventType.DISCONNECT,
       content: 'OFFLINE',

@@ -18,7 +18,7 @@ export class Log {
   @Column()
   event: string;
 
-  @Column()
+  @Column({ default: '' })
   printerName: string;
   @CreateDateColumn()
   createdAt: string;
