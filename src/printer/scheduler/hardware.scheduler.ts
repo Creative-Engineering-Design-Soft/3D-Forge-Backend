@@ -11,7 +11,7 @@ export class HardwareScheduler {
     private readonly printerGateway: PrinterGateway,
   ) {}
 
-  @Interval(60000) // 60초 마다
+  @Interval(2000) // 60초 마다
   async handleInterval() {
     const printers: Printer[] = await this.printerService.find({
       isConnected: true,
