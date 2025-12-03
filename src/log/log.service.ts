@@ -12,7 +12,12 @@ export class LogService extends BaseService<Log> {
   }
 
   findByUserId(userId: number) {
-    return this.find({ user: { id: userId } });
+    return this.repository.find({
+      where: { user: { id: userId } },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   insert(dto: CreateLogDTO) {

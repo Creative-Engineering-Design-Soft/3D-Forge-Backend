@@ -12,7 +12,12 @@ export class ModelService extends BaseService<Model> {
   }
 
   async findByUserID(userId: number) {
-    const models = await this.find({ user: { id: userId } });
+    const models = await this.repository.find({
+      where: { user: { id: userId } },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
     return ModelConverter.toModelListResDTO(models);
   }
 
