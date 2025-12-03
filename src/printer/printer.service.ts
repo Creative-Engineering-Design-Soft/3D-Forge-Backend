@@ -22,6 +22,7 @@ import { ModelService } from '../model/model.service';
 import { PrinterConverter } from './converter/printer.converter.dto';
 import { PrinterGateway } from './gateway/printer.gateway';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Operator } from './enum/printer.enum';
 
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
@@ -112,7 +113,7 @@ export class PrinterService extends BaseService<Printer> {
   }
 
   async updateStatus(dto: StatusReqDTO) {
-    console.log(dto);
+    if (!dto.status) dto.status = Operator.PAUSE;
     const printer = await this.findOne({ hardwareId: dto.hardwareId });
     if (!printer) {
       this.logger.error(
