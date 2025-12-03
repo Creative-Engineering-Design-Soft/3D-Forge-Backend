@@ -27,6 +27,7 @@ import { Operator } from './enum/printer.enum';
 @Injectable()
 export class PrinterService extends BaseService<Printer> {
   private readonly logger = new Logger('Printer');
+  public img: string;
 
   constructor(
     private readonly hardwareService: HardwareService,

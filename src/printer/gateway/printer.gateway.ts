@@ -82,6 +82,11 @@ export class PrinterGateway {
     this.logger.verbose(`Printer[hid='${dto.hardwareId}'] Updated`);
   }
 
+  @SubscribeMessage('stream')
+  handleStream(@MessageBody() dto: { hardwareId: string; image: string }) {
+    this.printerService.img = dto.image;
+  }
+
   // SECTION - Sender
   reqeustStatus(hardwareId: string) {
     this.server.to(hardwareId).emit('status', {});

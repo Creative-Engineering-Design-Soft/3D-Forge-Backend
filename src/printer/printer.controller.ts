@@ -120,6 +120,11 @@ export class PrinterController {
     return this.printerService.sendTest(hardwareId);
   }
 
+  @Get('testt')
+  image() {
+    return this.printerService.img;
+  }
+
   // Hardware Side
   /*@ApiOperation({ summary: '3D 프린터 연결' })
   @ApiBody({ type: ConnectionDTO })
