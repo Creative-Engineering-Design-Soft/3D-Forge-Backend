@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -85,6 +86,8 @@ export class PrinterController {
     @UserId() userId: number,
     @Body() dto: UploadFileDTO,
   ) {
+    if (!hardwareId)
+      throw new BadRequestException('pathVariable에는 hardwareId가 필요합니다');
     return {
       ...PrinterSuccessCode.OPERATED,
       result: this.printerService.uploadFile(hardwareId, userId, dto),

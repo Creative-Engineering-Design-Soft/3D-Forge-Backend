@@ -28,7 +28,7 @@ export class AccessDTO {
   address: string;
 }
 
-export interface StatusReqDTO {
+export class StatusReqDTO {
   hardwareId: string;
   bedTemp: number;
   nozzleTemp: number;

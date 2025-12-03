@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { BadGatewayException, Logger } from '@nestjs/common';
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -65,7 +65,16 @@ export class PrinterGateway {
 
   @SubscribeMessage('status')
   async handleStatus(@MessageBody() dto: StatusReqDTO) {
-    await this.printerService.updateStatus(dto);
+    try {
+      await this.printerService.updateStatus(dto);
+    } catch (err) {
+      this.logger.error(
+        `printerService.updateStatus를 실행하는 중 오류가 발생하였습니다. (printer.gateway.ts::handleStatus) >> ${err}`,
+      );
+      throw new BadGatewayException(
+        'printerService.updateStatus를 실행하는 중 오류가 발생하였습니다. (printer.gateway.ts::handleStatus)',
+      );
+    }
     this.logger.verbose(`Printer[hid='${dto.hardwareId}'] updated`);
   }
 

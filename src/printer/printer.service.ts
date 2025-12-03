@@ -97,7 +97,7 @@ export class PrinterService extends BaseService<Printer> {
   }
 
   async uploadFile(hardwareId: string, userId: number, dto: UploadFileDTO) {
-    const hardware = await this.findOneOrThrow(hardwareId);
+    await this.findOneOrThrow(hardwareId);
     const model = await this.modelService.findOwn(userId, dto.modelId);
     this.eventEmitter.emit('printer.upload', {
       hardwareId,
