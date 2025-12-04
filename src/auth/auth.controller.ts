@@ -94,7 +94,9 @@ export class AuthController {
     this.logger.log(`${ip}에서 Google Redirect 요청`);
     const user = req.user as OAuthDTO;
     const jwt = await this.authService.vaildateOAuth(user);
-    res.redirect(`http://localhost:5500/oauth?accessToken=${jwt.accessToken}`);
+    res.redirect(
+      `http://localhost:5500/oauth.html?accessToken=${jwt.accessToken}`,
+    );
     /*
     return {
       ...GeneralSuccessCode.OK,
