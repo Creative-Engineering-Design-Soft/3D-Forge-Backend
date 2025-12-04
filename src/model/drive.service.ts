@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { google, drive_v3 } from 'googleapis';
 import { Readable } from 'stream';
 import { ModelService } from './model.service';
@@ -15,13 +14,10 @@ export class DriveService {
   private readonly folderId: string;
   private readonly logger = new Logger(DriveService.name);
 
-  constructor(
-    private configService: ConfigService,
-    private readonly modelService: ModelService,
-  ) {
+  constructor(private readonly modelService: ModelService) {
     // 1. 환경 변수에서 서비스 계정 정보와 폴더 ID를 가져와.
-    const keyFilePath = this.configService.get<string>('GOOGLE_SECRET');
-    this.folderId = this.configService.get<string>('GOOGLE_FOLDER_ID');
+    const keyFilePath = process.env.GOOGLE_SECRET;
+    this.folderId = process.env.GOOGLE_FOLDER_ID;
 
     if (!keyFilePath || !this.folderId) {
       this.logger.error('Google Drive 설정 환경 변수가 부족해!');
@@ -29,9 +25,9 @@ export class DriveService {
     }
 
     // 2. 서비스 계정 인증 객체를 생성 (JWT)
-    const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
-    const clientSecret = this.configService.get<string>('GOOGLE_SECRET');
-    const refreshToken = this.configService.get<string>('GOOGLE_REFRESH_TOKEN'); // 이게 필요함!
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_SECRET;
+    const refreshToken = process.env.GOOGLE_REFRESH_TOKEN; // 이게 필요함!
 
     const authClient = new google.auth.OAuth2(clientId, clientSecret);
     authClient.setCredentials({ refresh_token: refreshToken });
