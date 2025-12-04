@@ -23,6 +23,8 @@ import {
   ResponseDTO,
 } from '../common/apiPayload/reponse.dto';
 import { ModelResDTO, UploadResDTO } from './dto/model.res.dto';
+import { DriveService } from './drive.service';
+import { ModelSuccessCode } from './code/model.success.code';
 
 const fileSizeLimit = 100 * 1024 * 1024; // 100MB
 const fileInterceptorOption = FileInterceptor('file', {
@@ -58,7 +60,31 @@ const modelUploadPath = process.env.MODEL_UPLOAD_PATH ?? '/public';
 export class ModelController {
   private readonly logger = new Logger('Model');
 
-  constructor(private modelService: ModelService) {}
+  constructor(
+    private readonly modelService: ModelService,
+    private readonly driveService: DriveService,
+  ) {}
+
+  @Post('upload-drive')
+  @UseGuards(LoginGuard)
+  @UseInterceptors(FileInterceptor('file')) // 폼 데이터에서 'file'이라는 필드 이름으로 파일을 받음
+  async uploadFileToDrive(
+    @UserId() userId: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('파일 선택하세요.');
+    }
+    const model = await this.driveService.uploadFile(userId, file);
+
+    return {
+      ...ModelSuccessCode.DRIVE_UPLOADED,
+      result: {
+        filePath: model.filePath,
+        id: model.id,
+      },
+    };
+  }
 
   @ApiOperation({ summary: '모델 파일 업로드' })
   @ApiResponseType(UploadResDTO, 200)
@@ -77,7 +103,7 @@ export class ModelController {
       user: { id: userId },
     });
     return {
-      ...GeneralSuccessCode.CREATED,
+      ...ModelSuccessCode.UPLOADED,
       result: {
         filePath: model.filePath,
         id: model.id,
