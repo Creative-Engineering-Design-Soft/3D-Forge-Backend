@@ -7,10 +7,11 @@ import {
   Logger,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   CreateUserReqDTO,
@@ -88,14 +89,17 @@ export class AuthController {
   async googleLoginRedirect(
     @Req() req: Request,
     @Ip() ip: string,
-  ): Promise<ResponseDTO<JwtPayloadResDTO>> {
+    @Res() res: Response,
+  ) {
     this.logger.log(`${ip}에서 Google Redirect 요청`);
     const user = req.user as OAuthDTO;
-
+    const jwt = await this.authService.vaildateOAuth(user);
+    res.redirect(`http://localhost:5500/oauth?accessToken=${jwt.accessToken}`);
+    /*
     return {
       ...GeneralSuccessCode.OK,
       result: await this.authService.vaildateOAuth(user),
-    };
+    };*/
   }
 
   //SECTION - test
