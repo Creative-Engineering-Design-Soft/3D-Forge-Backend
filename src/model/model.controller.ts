@@ -85,7 +85,7 @@ export class ModelController {
       },
     };
   }
-
+  /*
   @ApiOperation({ summary: '모델 파일 업로드' })
   @ApiResponseType(UploadResDTO, 200)
   @Post('uploads')
@@ -109,7 +109,7 @@ export class ModelController {
         id: model.id,
       },
     };
-  }
+  }*/
 
   @ApiOperation({ summary: '내가 업로드한 모델 파일 목록' })
   @ApiResponseArrayType(ModelResDTO, 200)
