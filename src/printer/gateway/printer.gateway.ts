@@ -133,6 +133,6 @@ export class PrinterGateway {
     );
     this.server
       .to(payload.hardwareId)
-      .emit('operate', { operater: payload.operator });
+      .emit('operate', { operator: payload.operator });
   }
 }
