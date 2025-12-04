@@ -55,7 +55,7 @@ export class AuthController {
       result: await this.authService.vaildateUser(dto),
     };
   }
-
+/*
   @ApiOperation({ summary: '회원가입' })
   @ApiBody({ type: CreateUserReqDTO })
   @ApiResponseType(CreateUserResDTO, 200)
@@ -72,7 +72,7 @@ export class AuthController {
         name: result.name,
       },
     };
-  }
+  }*/
 
   //SECTION - OAuth 2.0
   @ApiOperation({ summary: 'Google OAuth' })
