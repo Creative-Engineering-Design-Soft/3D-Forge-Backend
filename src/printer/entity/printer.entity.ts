@@ -34,6 +34,9 @@ export class Printer extends TimeBaseEntity {
   bedTemp: number;
 
   @Column({ default: 0 })
+  extruder: number;
+
+  @Column({ default: 0 })
   x: number;
   @Column({ default: 0 })
   y: number;

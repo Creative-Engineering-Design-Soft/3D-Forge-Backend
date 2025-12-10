@@ -13,11 +13,7 @@ import {
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  CreateUserReqDTO,
-  LoginUserReqDTO,
-  OAuthDTO,
-} from './dto/user.req.dto';
+import { LoginUserReqDTO, OAuthDTO } from './dto/user.req.dto';
 import { ApiResponseType, ResponseDTO } from '../common/apiPayload/reponse.dto';
 import { GeneralSuccessCode } from '../common/apiPayload/code/success.code';
 import { UserId } from './decorator/auth.decorator';
@@ -55,7 +51,7 @@ export class AuthController {
       result: await this.authService.vaildateUser(dto),
     };
   }
-/*
+  /*
   @ApiOperation({ summary: '회원가입' })
   @ApiBody({ type: CreateUserReqDTO })
   @ApiResponseType(CreateUserResDTO, 200)

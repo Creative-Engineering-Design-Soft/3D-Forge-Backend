@@ -70,6 +70,7 @@ export class PrinterController {
         z: result.z,
         status: result.status,
         percent: result.percent,
+        extruder: result.extruder,
       },
     };
   }

@@ -38,6 +38,7 @@ export class StatusReqDTO {
   x: number;
   y: number;
   z: number;
+  extruder: number;
   percent: number;
 }
 
