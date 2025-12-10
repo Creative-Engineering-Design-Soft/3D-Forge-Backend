@@ -69,7 +69,6 @@ export class PrinterGateway {
 
   @SubscribeMessage('status')
   async handleStatus(@MessageBody() dto: StatusReqDTO) {
-    if (!dto.extruder) dto.extruder = 0;
     try {
       await this.printerService.updateStatus(dto);
     } catch (err) {
